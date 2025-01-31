@@ -1,11 +1,11 @@
 {
-  "name": "ex-lite",
-  "version": "1.0.0",
+  "name": "exlite",
+  "version": "1.1.0",
   "description": "A utility library designed to simplify and enhance Express.js applications.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist/**/*.ts",
+    "dist/**/*.js",
     "dist/**/*.d.ts",
     "LICENSE"
   ],
@@ -44,6 +44,9 @@
     "exlite",
     "helper",
     "utility",
+    "proxy",
+    "typedi",
+    "tsyringe",
     "http-status",
     "http-errors",
     "asyncHandler"

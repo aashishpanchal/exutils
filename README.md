@@ -19,7 +19,7 @@
 - [Standardized JSON Responses with ApiRes](#standardized-json-responses-with-apires-)
 - [HttpError](#httperror-)
 - [HttpStatus](#httpstatus-)
-- [Class-Based Controllers](#class-based-controllers-️)
+- [Class-Based Controllers with `proxyWrapper`](#class-based-controllers-with-proxywrapper-️)
 - [Conclusion](#conclusion-)
 - [Contributing](#contributing-)
 - [Author](#author-)
@@ -481,19 +481,16 @@ const statusName = HttpStatus.NAMES.$200; // 'OK'
 - **HttpStatus.NOT_EXTENDED**: 510 — Not extended.
 - **HttpStatus.NETWORK_AUTHENTICATION_REQUIRED**: 511 — Network authentication required.
 
-## Class-Based Controllers 🏗️
+## Class-Based Controllers with `proxyWrapper` 🏗️
 
-`exlite` provides a convenient utility called `getHandlerFromClass`. This function allows you to easily wrap your class methods for routing while still benefiting from asynchronous error handling. Using class-based controllers can lead to cleaner and more maintainable code, especially in larger applications.
-
-### Implementing Class-Based Controllers
+`exlite` provides the utility `proxyWrapper` to simplify working with class-based controllers in Express.
 
 Here’s a step-by-step guide on how to implement class-based controllers with `exlite`:
 
-1. **Define Your Controller Class**
+**1. Define Your Controller Class**
 
 ```typescript
 import {Request} from 'express';
-import {getHandlerFromClass} from 'exlite';
 
 class ExampleController {
   constructor(private message: string) {}
@@ -505,37 +502,96 @@ class ExampleController {
 }
 ```
 
-2. **Set Up Your Routes**
+**2. Set Up Your Routes Using `proxyWrapper`**
 
 ```typescript
 // example-routes.ts
 import {Router} from 'express';
+import {proxyWrapper} from 'exlite';
 
 const exampleRoutes = (): Router => {
-  // Create an instance of the router
   const router = Router();
 
-  // Create handlers from the ExampleController class
-  const handler = getHandlerFromClass(ExampleController, 'Hello World');
+  // Create a proxied instance of ExampleController
+  const example = proxyWrapper(ExampleController, 'Hello World');
 
   // Configure routes
-  return router.post('/data', handler('getData'));
+  return router.post('/data', example.getData);
 };
 ```
 
-### Benefits of Class-Based Controllers
+**`proxyWrapper(clsOrInstance, ...args)`**
 
-- **Cleaner Code Structure**: Class-based controllers help organize your code better. By grouping related methods together, you make it easier to manage and understand your application, especially as it grows in complexity.
+- **Parameters**:
 
-- **Automatic Error Handling**: By using the `asyncHandler` wrapper provided by `exlite`, any errors thrown in your controller methods are automatically caught and handled. This reduces boilerplate code and improves the reliability of your application, allowing you to focus on writing business logic instead of error management.
+  - `clsOrInstance`: This parameter accepts either a class constructor or an instance of a class.
+  - `args`: This parameter accepts the arguments for the class constructor (if `clsOrInstance` is a constructor).
 
-### Conclusion
+- **Returns**: A proxied instance where all methods are wrapped with `asyncHandler`.
 
-Using class-based controllers with `exlite` not only enhances the organization of your code but also simplifies error handling, making your Express applications cleaner and more maintainable. This approach is particularly beneficial for larger applications where managing multiple routes and handlers can become cumbersome.
+#### How It Works
 
----
+- Instantiates the specified class if a constructor is provided.
+- Wraps all its methods with `asyncHandler`, allowing for automatic handling of asynchronous operations.
+- Prevents method/property overrides for safety.
 
-Feel free to let me know if you would like any further adjustments or additional information!
+### Using Dependency Injection Libraries
+
+you want to use a dependency injection library like `tsyringe` or `typedi`.
+
+#### Example with `tsyringe`
+
+```typescript
+import {Request} from 'express';
+import {container, singleton} from 'tsyringe';
+
+@singleton()
+class ExampleController {
+  constructor(private message: string) {}
+
+  async getData(req: Request) {
+    return ApiRes.ok({}, this.message);
+  }
+}
+
+// Set up routes
+const exampleRoutes = (): Router => {
+  const router = Router();
+
+  // Create a proxied instance of ExampleController
+  const example = proxyWrapper(container.resolve('ExampleController'));
+
+  // Configure routes
+  return router.post('/data', example.getData);
+};
+```
+
+#### Example with `typedi`
+
+```typescript
+import {Request} from 'express';
+import {Service, Container} from 'typedi';
+
+@Service()
+class ExampleController {
+  constructor(private message: string) {}
+
+  async getData(req: Request) {
+    return ApiRes.ok({}, this.message);
+  }
+}
+
+// Set up routes
+const exampleRoutes = (): Router => {
+  const router = Router();
+
+  // Create a proxied instance of ExampleController
+  const example = proxyWrapper(Container.get(ExampleController));
+
+  // Configure routes
+  return router.post('/data', example.getData);
+};
+```
 
 ## Conclusion 🏁
 

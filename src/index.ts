@@ -1,5 +1,5 @@
 export * from './types';
 export * from './enums';
 export * from './utils';
-export * from './handler';
+export * from './proxy';
 export * from './common';
