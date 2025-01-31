@@ -559,7 +559,7 @@ const exampleRoutes = (): Router => {
   const router = Router();
 
   // Create a proxied instance of ExampleController
-  const example = proxyWrapper(container.resolve('ExampleController'));
+  const example = proxyWrapper(container.resolve(ExampleController));
 
   // Configure routes
   return router.post('/data', example.getData);
