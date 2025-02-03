@@ -3,7 +3,7 @@ import type {Request, Response, NextFunction} from 'express';
 
 // utils types
 type ValueOf<T> = T[keyof T];
-type OnlyNumOf<K> = Exclude<K extends number ? K : null, null>;
+type OnlyNumOf<K> = K extends number ? K : never;
 // Define a type of HttpStatus only number
 export type HttpStatusNumber = OnlyNumOf<ValueOf<typeof HttpStatus>>;
 
