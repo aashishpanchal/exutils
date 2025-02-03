@@ -1,12 +1,12 @@
-> Make simple server-side logic and reduce boilerplate code.
+# Ex⚡
 
-[![npm downloads](https://img.shields.io/npm/dm/exlite.svg)](https://www.npmjs.com/package/exlite)
-[![npm version](https://img.shields.io/npm/v/exlite.svg)](https://www.npmjs.com/package/exlite)
+[![npm downloads](https://img.shields.io/npm/dm/exutile.svg)](https://www.npmjs.com/package/exutile)
+[![npm version](https://img.shields.io/npm/v/exutile.svg)](https://www.npmjs.com/package/exutile)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Overview 🌟
 
-`exlite` is a lightweight utility library designed specifically for Express.js, helping developers simplify server-side logic and reduce boilerplate code. It provides ready-to-use features like error handling, HTTP status utilities, and standardized API responses, enabling you to write cleaner, more maintainable code effortlessly.
+> `exutile` is a lightweight utility library designed specifically for Express.js, helping developers simplify server-side logic and reduce boilerplate code. It provides ready-to-use features like error handling, HTTP status utilities, and standardized API responses, enabling you to write cleaner, more maintainable code effortlessly.
 
 ## Table of Contents 📚
 
@@ -14,12 +14,12 @@
 - [Installation](#installation-)
 - [Motivation](#motivation-)
 - [Quick Start](#quick-start-)
-- [Error Handler Middleware: `globalErrorHandler`](#error-handler-middleware-globalerrorhandler-)
+- [`globalErrorHandler`: Error Handler Middleware](#globalerrorhandler-error-handler-middleware-)
 - [`asyncHandler`: Simplifying Controllers](#asynchandler-simplifying-controllers-️)
 - [Standardized JSON Responses with ApiRes](#standardized-json-responses-with-apires-)
 - [HttpError](#httperror-)
 - [HttpStatus](#httpstatus-)
-- [Class-Based Controllers with `proxyWrapper`](#class-based-controllers-with-proxywrapper-️)
+- [`proxyWrapper`: Class Controllers](#proxywrapper-class-controllers-️)
 - [Conclusion](#conclusion-)
 - [Contributing](#contributing-)
 - [Author](#author-)
@@ -34,23 +34,23 @@
 - ⚡ Flexible error handling with custom error classes.
 - 🎨 Efficient management of HTTP status codes and responses.
 
-### Installation 📥
+## Motivation 💡
+
+> Building APIs often involves repetitive tasks like handling errors, managing HTTP status codes, or structuring JSON responses. `exutile` was created to eliminate this hassle, allowing developers to focus on writing business logic instead of reinventing common solutions. Whether you're a beginner or an experienced developer, `exutile` streamlines your workflow and ensures your **Express** applications are consistent and reliable.
+
+## Installation 📥
 
 ```bash
-npm install --save exlite
+npm install --save exutile
 ```
 
-### Motivation 💡
+## Quick Start ⚡
 
-Building APIs often involves repetitive tasks like handling errors, managing HTTP status codes, or structuring JSON responses. exlite was created to eliminate this hassle, allowing developers to focus on writing business logic instead of reinventing common solutions. Whether you're a beginner or an experienced developer, exlite streamlines your workflow and ensures your Express applications are consistent and reliable.
-
-### Quick Start ⚡
-
-Here’s a minimal setup to get you started with exlite:
+Here’s a minimal setup to get you started with exutile:
 
 ```typescript
 import express from 'express';
-import {asyncHandler, globalErrorHandler} from 'exlite';
+import {asyncHandler, globalErrorHandler} from 'exutile';
 
 const app = express();
 
@@ -79,14 +79,14 @@ app.listen(3000, () => {
 });
 ```
 
-## Error Handler Middleware: `globalErrorHandler` 🚨
+## `globalErrorHandler`: Error Handler Middleware 🚨
 
-The globalErrorHandler middleware manages HttpErrors and unknown errors, returning appropriate JSON responses.
+The `globalErrorHandler` middleware manages **HttpErrors** and **Unknown** errors, returning appropriate **json responses.**
 
 **Usage:**
 
 ```typescript
-import {errorHandler} from 'exlite';
+import {errorHandler} from 'exutile';
 
 // Basic usage with default options
 app.use(
@@ -109,17 +109,17 @@ app.use(
 
 **Options:**
 
-- **isDev**: Enables detailed error messages in development mode (default: true).
+- **isDev**: Enables detailed error messages in development mode (default: **true**).
 - **write**: Optional callback for logging or handling errors.
 
 ## `asyncHandler`: Simplifying Controllers 🛠️
 
-The `asyncHandler` function in exlite eliminates repetitive `try-catch` blocks by managing error handling for both async and sync functions. It also integrates seamlessly with ApiRes for enhanced response handling and provides other handler features.
+Eliminates repetitive **`try-catch`** blocks by managing error handling for both async and sync functions. It also integrates seamlessly with **ApiRes** for enhanced response handling.
 
-#### Simplifying Route Handlers
+### Simplifying Route Handlers
 
 ```typescript
-import {asyncHandler, ApiRes} from 'exlite';
+import {asyncHandler, ApiRes} from 'exutile';
 
 // Route without asyncHandler (traditional approach with try-catch)
 app.get('/user/:id', async (req, res, next) => {
@@ -131,7 +131,7 @@ app.get('/user/:id', async (req, res, next) => {
   }
 });
 
-// Route using asyncHandler (simplified with exlite)
+// Route using asyncHandler (simplified with exutile)
 app.get(
   '/user/:id',
   asyncHandler(async (req, res) => {
@@ -141,7 +141,7 @@ app.get(
 );
 ```
 
-#### Advanced Example: Handling Cookies and Headers
+### Advanced Example: Handling Cookies and Headers
 
 ```typescript
 const login = asyncHandler(async (req, res) => {
@@ -169,7 +169,7 @@ const login = asyncHandler(async (req, res) => {
 });
 ```
 
-#### Minimal Examples
+### Minimal Examples
 
 - **Simple Response:**
 
@@ -205,11 +205,11 @@ const login = asyncHandler(async (req, res) => {
 });
 ```
 
-#### Middleware Example: Role-Based Access Control
+### Middleware Example: Role-Based Access Control
 
 ```typescript
 import {Role} from './constants';
-import {asyncHandler, ForbiddenError} from 'exlite';
+import {asyncHandler, ForbiddenError} from 'exutile';
 
 /** Permission middleware */
 export const permission = (...roles: Role[]) =>
@@ -226,20 +226,14 @@ export const onlyAdmin = permission(Role.ADMIN);
 export const adminOrUser = permission(Role.ADMIN, Role.USER);
 ```
 
-**Benefits:**
-
-- Eliminates boilerplate try-catch logic.
-- Simplifies response handling with `ApiRes`.
-- Works seamlessly for both `request handlers` and `middleware`.
-
 ## Standardized JSON Responses with ApiRes 📊
 
 ApiRes provides a consistent structure for API responses. It includes several static methods that handle common response patterns, such as `ok`, `created`, and `paginated`.
 
-**Usage:**
+#### Usage:
 
 ```typescript
-import {ApiRes} from 'exlite';
+import {ApiRes} from 'exutile';
 
 // With paginated
 const list = asyncHandler(async req => {
@@ -264,7 +258,7 @@ app.route('/').get(list).post(create);
 app.route('/:id').get(get);
 ```
 
-**ApiRes Methods**
+### ApiRes Methods
 
 - `ok(result, message)`: Returns a success response (HTTP 200).
 - `created(result, message)`: Returns a resource creation response (HTTP 201).
@@ -272,12 +266,12 @@ app.route('/:id').get(get);
 
 ## HttpError ❌
 
-The HttpError class standardizes error handling by extending the native Error class. It’s used to throw HTTP-related errors, which are then caught by the httpErrorHandler middleware.
+The HttpError class standardizes error handling by extending the native Error class. It’s used to throw HTTP-related errors, which are then caught by the **`globalErrorHandler`** middleware.
 
-**Usage:**
+#### Usage:
 
 ```typescript
-import {HttpError, HttpStatus} from 'exlite';
+import {HttpError, HttpStatus} from 'exutile';
 
 // Example without asyncHandler
 app.get('*', () => {
@@ -293,10 +287,10 @@ app.post(
 );
 ```
 
-**HttpError(msg, status, details)**
+### HttpError(msg, status, details):
 
 - `msg`: This parameter accepts an error message, which can be a single string or an array of strings (required).
-- `status`: The status code of the error, mirroring statusCode for general compatibility (default is 500).
+- `status`: The status code of the error, mirroring `statusCode` for general compatibility (default is 500).
 - `detail`: This is an optional plain object that contains additional information about the error.
 
 ```typescript
@@ -306,22 +300,22 @@ const err = new HttpError('Validation error.', 400, {
 });
 ```
 
-#### Provide common HTTP errors.
-
-- BadRequestError
-- UnAuthorizedError
-- NotFoundError
-- ConflictError
-- ForbiddenError
-- PaymentRequiredError
-- NotImplementedError
-- InternalServerError
-
 _Note: If only a status code is provided, the HttpError class will automatically generate an appropriate error name based on that status code._
 
-#### **isHttpError(value) Static Method**
+### Common HTTP Errors:
 
-The `HttpError.isHttpError(value)` method is a useful way to determine if a specific value is an instance of the HttpError class. It will return true if the value is derived from the HttpError constructor, allowing you to easily identify HTTP-related errors in your application.
+- `BadRequestError`
+- `UnAuthorizedError`
+- `NotFoundError`
+- `ConflictError`
+- `ForbiddenError`
+- `PaymentRequiredError`
+- `NotImplementedError`
+- `InternalServerError`
+
+### `isHttpError(value)` Static Method:
+
+The `HttpError.isHttpError(value)` method determines if a specific value is an instance of the `HttpError` class.
 
 ```typescript
 // If it is an HttpError, send a JSON response with the error details
@@ -333,16 +327,14 @@ else {
 }
 ```
 
-#### Error Properties
+### Error Properties:
 
-When you create an instance of HttpError, it comes with several useful properties that help provide context about the error:
+- **status**: The HTTP status code associated with the error.
+- **message**: A brief description of the error.
+- **stack**: The stack trace of the error (available in development mode).
+- **details**: Optional additional information about the error.
 
-- **status**: The HTTP status code associated with the error (e.g., 404 for Not Found, 500 for Internal Server Error).
-- **message**: A brief description of the error, which is useful for debugging and logging.
-- **stack**: The stack trace of the error, available when the application is in development mode. This helps identify where the error occurred in your code.
-- **details**: An optional property that can hold additional information about the error, such as validation issues or other relevant data.
-
-#### Custom ErrorHandler Middleware
+### Custom ErrorHandler Middleware
 
 ```typescript
 export const errorHandler: ErrorRequestHandler = (err, req, res, next): any => {
@@ -362,24 +354,24 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next): any => {
 };
 ```
 
-#### toJson Static Method
+### `error.toJson()` Method:
 
-The `toJson` method is a static function that allows you to convert an HttpError instance into a structured JSON format. This is particularly useful for standardizing error responses sent to clients. When you call `toJson`, it returns an object containing the following properties:
+Converts an `HttpError` instance into a structured JSON format.
 
-- **status**: The HTTP status code of the error.
-- **message**: A human-readable message describing the error.
-- **details** (if applicable): Any additional information that provides context about the error.
+```typescript
+return res.status(err.status).json(err.toJson());
+```
 
-This method ensures that your API consistently responds to errors in a uniform way, making it easier for clients to understand and handle error responses.
+_Note: **details** if applicable then additional information that provides context about the error._
 
 ## HttpStatus ✅
 
-The HttpStatus provides readable constants for standard HTTP status codes (2xx, 3xx, 4xx, 5xx), improving code clarity and consistency.
+The `HttpStatus` provides readable constants for standard HTTP status codes **(2xx, 3xx, 4xx, 5xx)** and **Names**, improving code clarity and consistency.
 
-**Usage:**
+#### Usage:
 
 ```typescript
-import {HttpStatus} from 'exlite';
+import {HttpStatus} from 'exutile';
 
 // Example: Basic usage in a route
 app.get('/status-example', (req, res) => {
@@ -403,95 +395,56 @@ app.post('/create', (req, res) => {
 });
 ```
 
-#### HttpStatus.NAMES of HTTP Status Code Name
+### `HttpStatus.NAMES` of HTTP Status Code Name:
 
-The NAMES object provides a simple lookup for the descriptive names of HTTP status codes:
+The `NAMES` object provides a simple lookup for the descriptive names of HTTP status codes.
 
 ```typescript
 const statusName = HttpStatus.NAMES.$200; // 'OK'
 ```
 
-**Benefits:**
+### Commonly Used HTTP Status Codes:
 
-- Improves code readability and maintainability.
-- Reduces dependency on remembering or looking up numeric codes.
-- Ensures consistent use of status codes throughout your application.
+- **2xx: Success**
 
-**Below is a list of commonly used HTTP status codes, their respective constants, and descriptions for easier reference:**
+  - `HttpStatus.OK`: 200 — Request succeeded.
+  - `HttpStatus.CREATED`: 201 — Resource created.
+  - `HttpStatus.ACCEPTED`: 202 — Request accepted for processing.
+  - `HttpStatus.NO_CONTENT`: 204 — No content to send.
+  - and more ....
 
-#### **2xx: Success**
+- **3xx: Redirection**
 
-- **HttpStatus.OK**: 200 — Request succeeded.
-- **HttpStatus.CREATED**: 201 — Resource created.
-- **HttpStatus.ACCEPTED**: 202 — Request accepted for processing.
-- **HttpStatus.NON_AUTHORITATIVE_INFORMATION**: 203 — Non-authoritative information.
-- **HttpStatus.NO_CONTENT**: 204 — No content to send.
-- **HttpStatus.RESET_CONTENT**: 205 — Content reset.
-- **HttpStatus.PARTIAL_CONTENT**: 206 — Partial content delivered.
+  - `HttpStatus.MOVED_PERMANENTLY`: 301 — Resource moved permanently.
+  - `HttpStatus.FOUND`: 302 — Resource found at another URI.
+  - `HttpStatus.NOT_MODIFIED`: 304 — Resource not modified.
+  - and more ....
 
-#### **3xx: Redirection**
+- **4xx: Client Error**
 
-- **HttpStatus.AMBIGUOUS**: 300 — Multiple choices available.
-- **HttpStatus.MOVED_PERMANENTLY**: 301 — Resource moved permanently.
-- **HttpStatus.FOUND**: 302 — Resource found at another URI.
-- **HttpStatus.SEE_OTHER**: 303 — See other resource.
-- **HttpStatus.NOT_MODIFIED**: 304 — Resource not modified.
-- **HttpStatus.TEMPORARY_REDIRECT**: 307 — Temporary redirect.
-- **HttpStatus.PERMANENT_REDIRECT**: 308 — Permanent redirect.
+  - `HttpStatus.BAD_REQUEST`: 400 — Bad request.
+  - `HttpStatus.UNAUTHORIZED`: 401 — Authentication required.
+  - `HttpStatus.FORBIDDEN`: 403 — Access forbidden.
+  - `HttpStatus.NOT_FOUND`: 404 — Resource not found.
+  - and more ....
 
-#### **4xx: Client Error**
+- **5xx: Server Error**
+  - `HttpStatus.INTERNAL_SERVER_ERROR`: 500 — Internal server error.
+  - `HttpStatus.NOT_IMPLEMENTED`: 501 — Not implemented.
+  - `HttpStatus.SERVICE_UNAVAILABLE`: 503 — Service unavailable.
+  - and more ....
 
-- **HttpStatus.BAD_REQUEST**: 400 — Bad request.
-- **HttpStatus.UNAUTHORIZED**: 401 — Authentication required.
-- **HttpStatus.PAYMENT_REQUIRED**: 402 — Payment required.
-- **HttpStatus.FORBIDDEN**: 403 — Access forbidden.
-- **HttpStatus.NOT_FOUND**: 404 — Resource not found.
-- **HttpStatus.METHOD_NOT_ALLOWED**: 405 — Method not allowed.
-- **HttpStatus.NOT_ACCEPTABLE**: 406 — Not acceptable content.
-- **HttpStatus.PROXY_AUTHENTICATION_REQUIRED**: 407 — Proxy authentication required.
-- **HttpStatus.REQUEST_TIMEOUT**: 408 — Request timed out.
-- **HttpStatus.CONFLICT**: 409 — Conflict with current state.
-- **HttpStatus.GONE**: 410 — Resource gone.
-- **HttpStatus.LENGTH_REQUIRED**: 411 — Length required.
-- **HttpStatus.PRECONDITION_FAILED**: 412 — Precondition failed.
-- **HttpStatus.PAYLOAD_TOO_LARGE**: 413 — Payload too large.
-- **HttpStatus.URI_TOO_LONG**: 414 — URI too long.
-- **HttpStatus.UNSUPPORTED_MEDIA_TYPE**: 415 — Unsupported media type.
-- **HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE**: 416 — Requested range not satisfiable.
-- **HttpStatus.EXPECTATION_FAILED**: 417 — Expectation failed.
-- **HttpStatus.I_AM_A_TEAPOT**: 418 — I'm a teapot (a joke HTTP status).
-- **HttpStatus.MISDIRECTED_REQUEST**: 421 — Misdirected request.
-- **HttpStatus.UNPROCESSABLE_ENTITY**: 422 — Unprocessable entity.
-- **HttpStatus.FAILED_DEPENDENCY**: 424 — Failed dependency.
-- **HttpStatus.PRECONDITION_REQUIRED**: 428 — Precondition required.
-- **HttpStatus.TOO_MANY_REQUESTS**: 429 — Too many requests.
+## `proxyWrapper`: Class Controllers 🏗️
 
-#### **5xx: Server Error**
+`exutile` provides the utility `proxyWrapper` to make simplify working with class-based controllers in Express.
 
-- **HttpStatus.INTERNAL_SERVER_ERROR**: 500 — Internal server error.
-- **HttpStatus.NOT_IMPLEMENTED**: 501 — Not implemented.
-- **HttpStatus.BAD_GATEWAY**: 502 — Bad gateway.
-- **HttpStatus.SERVICE_UNAVAILABLE**: 503 — Service unavailable.
-- **HttpStatus.GATEWAY_TIMEOUT**: 504 — Gateway timeout.
-- **HttpStatus.HTTP_VERSION_NOT_SUPPORTED**: 505 — HTTP version not supported.
-- **HttpStatus.VARIANT_ALSO_NEGOTIATES**: 506 — Variant also negotiates.
-- **HttpStatus.INSUFFICIENT_STORAGE**: 507 — Insufficient storage.
-- **HttpStatus.LOOP_DETECTED**: 508 — Loop detected.
-- **HttpStatus.BANDWIDTH_LIMIT_EXCEEDED**: 509 — Bandwidth limit exceeded.
-- **HttpStatus.NOT_EXTENDED**: 510 — Not extended.
-- **HttpStatus.NETWORK_AUTHENTICATION_REQUIRED**: 511 — Network authentication required.
-
-## Class-Based Controllers with `proxyWrapper` 🏗️
-
-`exlite` provides the utility `proxyWrapper` to simplify working with class-based controllers in Express.
-
-Here’s a step-by-step guide on how to implement class-based controllers with `exlite`:
-
-**1. Define Your Controller Class**
+#### Usage:
 
 ```typescript
+// example-controller.ts
 import {Request} from 'express';
 
+// Controller Class
 class ExampleController {
   constructor(private message: string) {}
 
@@ -500,14 +453,11 @@ class ExampleController {
     return ApiRes.ok({}, this.message);
   }
 }
-```
 
-**2. Set Up Your Routes Using `proxyWrapper`**
-
-```typescript
 // example-routes.ts
 import {Router} from 'express';
-import {proxyWrapper} from 'exlite';
+import {proxyWrapper} from 'exutile';
+import {ExampleController} from './example-controller.ts';
 
 const exampleRoutes = (): Router => {
   const router = Router();
@@ -520,41 +470,26 @@ const exampleRoutes = (): Router => {
 };
 ```
 
-**`proxyWrapper(clsOrInstance, ...args)`**
+### `proxyWrapper(clsOrInstance, ...args)`:
 
 - **Parameters**:
-
-  - `clsOrInstance`: This parameter accepts either a class constructor or an instance of a class.
-  - `args`: This parameter accepts the arguments for the class constructor (if `clsOrInstance` is a constructor).
-
+  - `clsOrInstance`: A class constructor or an instance of a class.
+  - `args`: Arguments for the class constructor (if `clsOrInstance` is a constructor).
 - **Returns**: A proxied instance where all methods are wrapped with `asyncHandler`.
 
-#### How It Works
+### How It Works
 
 - Instantiates the specified class if a constructor is provided.
 - Wraps all its methods with `asyncHandler`, allowing for automatic handling of asynchronous operations.
-- Prevents method/property overrides for safety.
+- **Prevents method/property** overrides for safety.
 
-### Using Dependency Injection Libraries
+### Using Dependency Injection Libraries:
 
-you want to use a dependency injection library like `tsyringe` or `typedi`.
+You can use `proxyWrapper` with dependency injection libraries like `tsyringe` or `typedi`.
 
 #### Example with `tsyringe`
 
 ```typescript
-import {Request} from 'express';
-import {container, singleton} from 'tsyringe';
-
-@singleton()
-class ExampleController {
-  constructor(private message: string) {}
-
-  async getData(req: Request) {
-    return ApiRes.ok({}, this.message);
-  }
-}
-
-// Set up routes
 const exampleRoutes = (): Router => {
   const router = Router();
 
@@ -569,19 +504,6 @@ const exampleRoutes = (): Router => {
 #### Example with `typedi`
 
 ```typescript
-import {Request} from 'express';
-import {Service, Container} from 'typedi';
-
-@Service()
-class ExampleController {
-  constructor(private message: string) {}
-
-  async getData(req: Request) {
-    return ApiRes.ok({}, this.message);
-  }
-}
-
-// Set up routes
 const exampleRoutes = (): Router => {
   const router = Router();
 
@@ -595,7 +517,7 @@ const exampleRoutes = (): Router => {
 
 ## Conclusion 🏁
 
-exlite is a powerful tool designed to simplify and enhance Express.js applications by providing essential features out of the box. Whether you’re building a simple API or a complex web application, exlite helps you maintain clean and manageable code.
+`exutile` is a powerful tool designed to simplify and enhance Express.js applications by providing essential features out of the box. Whether you’re building a simple API or a complex web application, exutile helps you maintain clean and manageable code.
 
 ## Contributing 🤝
 

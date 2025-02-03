@@ -1,6 +1,6 @@
 {
-  "name": "exlite",
-  "version": "1.1.0",
+  "name": "exutile",
+  "version": "1.0.0",
   "description": "A utility library designed to simplify and enhance Express.js applications.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aashishpanchal/exlite.git"
+    "url": "git+https://github.com/aashishpanchal/exutile.git"
   },
   "author": "Aashish Panchal <aipanchal51@gmail.com>",
   "license": "MIT",
@@ -41,7 +41,7 @@
   },
   "keywords": [
     "express",
-    "exlite",
+    "exutile",
     "helper",
     "utility",
     "proxy",
@@ -51,6 +51,6 @@
     "http-errors",
     "asyncHandler"
   ],
-  "homepage": "https://github.com/aashishpanchal/exlite#readme",
+  "homepage": "https://github.com/aashishpanchal/exutile#readme",
   "packageManager": "pnpm@10.0.0"
 }
