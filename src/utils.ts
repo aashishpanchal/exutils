@@ -1,5 +1,5 @@
-import {ReqHandler} from './types';
-import {ErrorRequestHandler, Response} from 'express';
+import type {ReqHandler} from './types';
+import type {ErrorRequestHandler, Response} from 'express';
 import {HttpError, InternalServerError, ApiRes} from './common';
 
 /**
@@ -31,7 +31,7 @@ const handleResult = (result: unknown, res: Response): void => {
  * }));
  */
 export const asyncHandler =
-  (func: ReqHandler): ReqHandler =>
+  (func: ReqHandler<unknown>): ReqHandler<void> =>
   (req, res, next) => {
     try {
       const result = func(req, res, next);
