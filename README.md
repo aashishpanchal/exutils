@@ -15,6 +15,7 @@
 - [Motivation](#motivation-)
 - [Quick Start](#quick-start-)
 - [`globalErrorHandler`: Error Handler Middleware](#globalerrorhandler-error-handler-middleware-)
+- [`serveStatic`: Serve Static Website Middleware (e.g., React, Vue)](#servestatic-serve-static-website-middleware-eg-react-vue)
 - [`asyncHandler`: Simplifying Controllers](#asynchandler-simplifying-controllers-️)
 - [Standardized JSON Responses with ApiRes](#standardized-json-responses-with-apires-)
 - [HttpError](#httperror-)
@@ -27,12 +28,12 @@
 
 ## Features ✨
 
-- 🚦 Simplifies route and controller management with pre-built helpers.
-- 🛡️ Integrated error handling across all routes and middleware.
-- ✨ Easy-to-use `asyncHandler` for automatically catching and handling errors.
-- 📜 Customizable response formatting for consistent API outputs.
-- ⚡ Flexible error handling with custom error classes.
-- 🎨 Efficient management of HTTP status codes and responses.
+- ✅ Simplified error handling with `globalErrorHandler`
+- ✅ Simplified Serve Static Website with `serveStatic`
+- ✅ Automatic async error handling using `asyncHandler`
+- ✅ Standardized API responses with `ApiRes`
+- ✅ Flexible HTTP status codes and custom error classes
+- ✅ Class-based controllers with `proxyWrapper`
 
 ## Motivation 💡
 
@@ -111,6 +112,33 @@ app.use(
 
 - **isDev**: Enables detailed error messages in development mode (default: **true**).
 - **write**: Optional callback for logging or handling errors.
+
+## `serveStatic`: Serve Static Website Middleware (e.g., React, Vue)
+
+The `serveStatic` function is a middleware that serves static files from a directory and handles Single Page Application **(SPA)** routing by returning index.html for unmatched routes, excluding specified patterns **(e.g., API routes).**
+
+#### Usage:
+
+```typescript
+import express from 'express';
+import {serveStatic} from 'exutile';
+
+const app = express();
+
+// Serve static files and handle SPA routing
+app.use(serveStatic({path: 'public', exclude: '/api{/*path}'}));
+
+app.listen(3000, () => {
+  console.log('Server running on port 3000');
+});
+```
+
+#### Options:
+
+- path: The directory to serve static files from `(default: "public")`.
+- exclude: Routes to exclude from SPA routing. This can be a string or an array of strings. `(default: '/api{/\*path}')`.
+
+> _Note: The exclude option can take advantage of the [path-to-regexp](https://www.npmjs.com/package/path-to-regexp) library to define more complex route patterns._
 
 ## `asyncHandler`: Simplifying Controllers 🛠️
 
@@ -300,7 +328,7 @@ const err = new HttpError('Validation error.', 400, {
 });
 ```
 
-_Note: If only a status code is provided, the HttpError class will automatically generate an appropriate error name based on that status code._
+> _Note: If only a status code is provided, the **HttpError** class will automatically generate an appropriate error name based on that status code._
 
 ### Common HTTP Errors:
 
@@ -362,7 +390,7 @@ Converts an `HttpError` instance into a structured JSON format.
 return res.status(err.status).json(err.toJson());
 ```
 
-_Note: **details** if applicable then additional information that provides context about the error._
+> _Note: **details** if applicable then additional information that provides context about the error._
 
 ## HttpStatus ✅
 

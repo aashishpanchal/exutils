@@ -107,3 +107,15 @@ export type ProxyWrapper = {
     ...args: ConstructorParameters<Constructor<T>>
   ): WrappedMethods<T>;
 };
+
+// Define the ErrorOption type
+export type ErrorOptions = {
+  isDev?: boolean;
+  write?: (error: unknown) => void;
+};
+
+// Define the ServeOptions type
+export type ServeOptions = {
+  path?: string;
+  exclude?: string | string[];
+};

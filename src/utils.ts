@@ -1,4 +1,4 @@
-import type {ReqHandler} from './types';
+import type {ErrorOptions, ReqHandler} from './types';
 import type {ErrorRequestHandler, Response} from 'express';
 import {HttpError, InternalServerError, ApiRes} from './common';
 
@@ -47,11 +47,6 @@ export const asyncHandler =
     }
   };
 
-type Options = {
-  isDev?: boolean;
-  write?: (error: unknown) => void;
-};
-
 /**
  * Express middleware to handle `HttpError` and unknown errors.
  *
@@ -59,7 +54,7 @@ type Options = {
  * - Logs unknown errors and sends generic error response.
  * - Includes detailed error info in development (`isDev`).
  *
- * @param {Object} [options] - Options for error handling.
+ * @param {object} [options] - Options for error handling.
  * @param {boolean} [options.isDev=true] - Include detailed error information in responses if true. Default is `true`.
  * @param {(err: unknown) => void} [options.write] - Function to handle logging of unknown errors. If not provided, errors will not be logged.
  *
@@ -76,7 +71,7 @@ type Options = {
  * }));
  */
 export const globalErrorHandler = (
-  options: Options = {},
+  options: ErrorOptions = {},
 ): ErrorRequestHandler => {
   const {isDev = true, write = undefined} = options;
 
