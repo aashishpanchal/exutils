@@ -16,7 +16,7 @@
 - [Quick Start](#quick-start-)
 - [`globalErrorHandler`: Error Handler Middleware](#globalerrorhandler-error-handler-middleware-)
 - [`serveStatic`: Serve Static Website Middleware (e.g., React, Vue)](#servestatic-serve-static-website-middleware-eg-react-vue)
-- [`asyncHandler`: Simplifying Controllers](#asynchandler-simplifying-controllers-️)
+- [`async-handler`: Simplifying Controllers](#async-handler-simplifying-controllers-️)
 - [Standardized JSON Responses with ApiRes](#standardized-json-responses-with-apires-)
 - [HttpError](#httperror-)
 - [HttpStatus](#httpstatus-)
@@ -30,7 +30,7 @@
 
 - ✅ Simplified error handling with `globalErrorHandler`
 - ✅ Simplified Serve Static Website with `serveStatic`
-- ✅ Automatic async error handling using `asyncHandler`
+- ✅ Automatic async error handling using `async-handler`
 - ✅ Standardized API responses with `ApiRes`
 - ✅ Flexible HTTP status codes and custom error classes
 - ✅ Class-based controllers with `proxyWrapper`
@@ -51,15 +51,15 @@ Here’s a minimal setup to get you started with exutile:
 
 ```typescript
 import express from 'express';
-import {asyncHandler, globalErrorHandler} from 'exutile';
+import {handler, globalErrorHandler} from 'exutile';
 
 const app = express();
 
 // Middleware
 app.use(express.json());
 
-// Example route using asyncHandler
-const getUser = asyncHandler(async (req, res) => {
+// Example route using async-handler
+const getUser = handler(async (req, res) => {
   const user = await getUserById(req.params.id);
   return ApiRes.ok(user); // Send user data in the response
 });
@@ -140,16 +140,16 @@ app.listen(3000, () => {
 
 > _Note: The exclude option can take advantage of the [path-to-regexp](https://www.npmjs.com/package/path-to-regexp) library to define more complex route patterns._
 
-## `asyncHandler`: Simplifying Controllers 🛠️
+## `async-handler`: Simplifying Controllers 🛠️
 
 Eliminates repetitive **`try-catch`** blocks by managing error handling for both async and sync functions. It also integrates seamlessly with **ApiRes** for enhanced response handling.
 
 ### Simplifying Route Handlers
 
 ```typescript
-import {asyncHandler, ApiRes} from 'exutile';
+import {handler, ApiRes} from 'exutile';
 
-// Route without asyncHandler (traditional approach with try-catch)
+// Route without async-handler (traditional approach with try-catch)
 app.get('/user/:id', async (req, res, next) => {
   try {
     const user = await getUserById(req.params.id);
@@ -159,10 +159,10 @@ app.get('/user/:id', async (req, res, next) => {
   }
 });
 
-// Route using asyncHandler (simplified with exutile)
+// Route using handler (simplified with exutile)
 app.get(
   '/user/:id',
-  asyncHandler(async (req, res) => {
+  handler(async (req, res) => {
     const user = await getUserById(req.params.id); // Fetch user from database
     return ApiRes.ok(user, 'User fetched successfully'); // Send success response using ApiRes
   }),
@@ -172,7 +172,7 @@ app.get(
 ### Advanced Example: Handling Cookies and Headers
 
 ```typescript
-const login = asyncHandler(async (req, res) => {
+const login = handler(async (req, res) => {
   const {email, password} = req.body;
   const user = await loginUser(email, password);
 
@@ -202,19 +202,19 @@ const login = asyncHandler(async (req, res) => {
 - **Simple Response:**
 
 ```typescript
-const getHome = asyncHandler(() => 'Hello World!');
+const getHome = handler(() => 'Hello World!');
 ```
 
 - **Custom JSON Response:**
 
 ```typescript
-const getHome = asyncHandler(() => ({message: 'Hello World!'}));
+const getHome = handler(() => ({message: 'Hello World!'}));
 ```
 
 - **Without ApiRes:**
 
 ```typescript
-const login = asyncHandler(async (req, res) => {
+const login = handler(async (req, res) => {
   const user = await getUserById(req.params.id);
   // Manually setting headers
   res.setHeader('X-Custom-Header', 'SomeHeaderValue');
@@ -237,11 +237,11 @@ const login = asyncHandler(async (req, res) => {
 
 ```typescript
 import {Role} from './constants';
-import {asyncHandler, ForbiddenError} from 'exutile';
+import {handler, ForbiddenError} from 'exutile';
 
 /** Permission middleware */
 export const permission = (...roles: Role[]) =>
-  asyncHandler(async (req, _, next) => {
+  handler(async (req, _, next) => {
     const {user} = req;
 
     if (!roles.includes(user?.role))
@@ -264,19 +264,19 @@ ApiRes provides a consistent structure for API responses. It includes several st
 import {ApiRes} from 'exutile';
 
 // With paginated
-const list = asyncHandler(async req => {
+const list = handler(async req => {
   const {data, meta} = await getUsers(req.query);
   return ApiRes.paginated(data, meta, 'Get users list successfully');
 });
 
 // With created
-const create = asyncHandler(async req => {
+const create = handler(async req => {
   const user = await createUser(req.body);
   return ApiRes.created(user, 'User created successfully');
 });
 
 // With ok
-const get = asyncHandler(async req => {
+const get = handler(async req => {
   const user = await getUser(req.params);
   return ApiRes.ok(user, 'Get user successfully');
 });
@@ -301,15 +301,15 @@ The HttpError class standardizes error handling by extending the native Error cl
 ```typescript
 import {HttpError, HttpStatus} from 'exutile';
 
-// Example without asyncHandler
+// Example without async-handler
 app.get('*', () => {
   throw new HttpError('Not Found', HttpStatus.NOT_FOUND); // Throw a 404 error
 });
 
-// Example with asyncHandler
+// Example with async-handler
 app.post(
   '/example',
-  asyncHandler(req => {
+  handler(req => {
     if (!req.body.name) throw new BadRequestError('Name is required');
   }),
 );
@@ -503,12 +503,12 @@ const exampleRoutes = (): Router => {
 - **Parameters**:
   - `clsOrInstance`: A class constructor or an instance of a class.
   - `args`: Arguments for the class constructor (if `clsOrInstance` is a constructor).
-- **Returns**: A proxied instance where all methods are wrapped with `asyncHandler`.
+- **Returns**: A proxied instance where all methods are wrapped with `async-handler`.
 
 ### How It Works
 
 - Instantiates the specified class if a constructor is provided.
-- Wraps all its methods with `asyncHandler`, allowing for automatic handling of asynchronous operations.
+- Wraps all its methods with `async-handler`, allowing for automatic handling of asynchronous operations.
 - **Prevents method/property** overrides for safety.
 
 ### Using Dependency Injection Libraries:

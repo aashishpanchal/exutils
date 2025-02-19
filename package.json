@@ -1,6 +1,6 @@
 {
   "name": "exutile",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A utility library designed to simplify and enhance Express.js applications.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -43,18 +43,16 @@
     "typescript": "~5.5.4"
   },
   "keywords": [
+    "proxy",
     "express",
     "exutile",
-    "helper",
+    "handler",
     "utility",
-    "proxy",
-    "typedi",
-    "tsyringe",
     "http-status",
     "serve-static",
     "http-errors",
     "asyncHandler"
   ],
   "homepage": "https://github.com/aashishpanchal/exutile#readme",
-  "packageManager": "pnpm@10.0.0"
+  "packageManager": "bun@1.2.2"
 }
