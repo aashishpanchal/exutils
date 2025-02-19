@@ -30,10 +30,7 @@ const handleResult = (result: unknown, res: Response): void => {
  * @returns {ReqHandler} - A wrapped handler with error and result handling.
  *
  * @example
- * app.get('/example', handler(async (req, res) => {
- *   const data = await fetchData();
- *   return data;
- * }));
+ * app.get('/example', handler(async (req, res) => await fetchData()));
  */
 export const handler =
   (func: ReqHandler<unknown>): ReqHandler<void> =>
